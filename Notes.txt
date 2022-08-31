@@ -1,0 +1,2 @@
+Used components: file, http4, jms, validator, xslt, marshal, split, filter, direct, xpath, transform, mock, processor and errorHandler and deadLetterChannel
+    using camel DSL.
