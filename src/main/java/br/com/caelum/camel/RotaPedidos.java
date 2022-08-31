@@ -62,7 +62,7 @@ public class RotaPedidos {
 				// =============== End of Handling Exceptions =================
 
 				// from() => This is the place where all the data is coming from.
-				//from("file:pedidos?delay=5s&noop=true") // Using the component 'file' go to the 'pedidos' folder and also execute every 5s. 'noop=true' means that to copy/paste files (without it would cut/paste)
+				//from("file:pedidos?delay=5s&noop=true") // Using the component 'file' go to the 'pedidos' folder and also execute every 5s. 'noop=true' means that to copy/paste files (without it would cut/paste). It also means that I do not process files when they are the same.
 				from("activemq:queue:pedidos") // Replacing file component and now using the component 'activemq' that was added on line 16.
 					.log("${file:name}") // Logging filenames
 					.routeId("rota-pedidos") // Creating ID for this route.
