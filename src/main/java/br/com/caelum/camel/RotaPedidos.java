@@ -25,6 +25,9 @@ public class RotaPedidos {
 					Scenario: Lots of transformations were executed but the last one (or any other during the process) failed. The errorHandler will handle the exception from the moment that the route threw the Exception,
 					which means, it will catch the Message that went through transformations. But if I want, I can catch the original message as well. For example:
 					errorHandler(deadLetterChannel("activemq:queue:pedidos.DLQ").useOriginalMessage().maximumRedeliveries(3).redeliveryDelay(5000);
+
+					The Example 1 is a more global level handling.
+					The Example 2 is a more scoped and I can check the exception type.
 				 */
 				// Example 1
 				// Error handler needs to be created at the beginning (before calling any route).
@@ -32,7 +35,7 @@ public class RotaPedidos {
 				errorHandler(deadLetterChannel("activemq:queue:pedidos.DLQ") // deadLetterChannel() is a route to my errors. This line creates a 'erro' folder and add the error in there.
 					.logExhaustedMessageHistory(true) // Show logs on the console.
 					.maximumRedeliveries(3).redeliveryDelay(3000)  // Retry 3 times and wait 3s before each attempt.
-					.onRedelivery(new Processor() {
+					.onRedelivery(new Processor() { // Allow custom processing of a Message before its being redelivered.
 						@Override
 						public void process(Exchange exchange) throws Exception {
 							int counter = (int) exchange.getIn().getHeader(Exchange.REDELIVERY_COUNTER);
@@ -45,7 +48,8 @@ public class RotaPedidos {
 				// Example 2.
 				// Error handler needs to be created at the beginning (before calling any route).
 //				onException(SAXParseException.class) // I could use any Exception: Exception.class, SAXParseException.class, IOException, etc.
-//					.handled(true) // Remove the message that has problem out of the route.
+//					.handled(true) // Remove the message that has problem out of the route. So it will not propagate to the consumer.
+								   // It is also removed from the exchange, otherwise,  upper routes could see these errors.
 //					.maximumRedeliveries(3).redeliveryDelay(4000)  // Retry 3 times and wait 4s before each attempt.
 //					.onRedelivery(new Processor() {
 //						@Override
